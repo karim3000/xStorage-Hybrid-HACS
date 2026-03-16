@@ -1,0 +1,5 @@
+{
+  "name": "xStorage Hybrid Integration",
+  "content_in_root": false,
+  "domains": ["eaton_xstorage_hybrid"]
+}
