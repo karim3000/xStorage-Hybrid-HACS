@@ -19,7 +19,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     return {"title": f"xStorage Hybrid ({data[CONF_HOST]})"}
 
 
-class XStorageHybridConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class EatonXstorageHybridConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Eaton xStorage Hybrid.
     
     This class defines the configuration flow that appears in the UI
