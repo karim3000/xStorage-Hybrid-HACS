@@ -6,5 +6,7 @@
     "pymodbus==3.11.4"
   ],
   "codeowners": ["@karim3000"],
-  "iot_class": "local_polling"
+  "iot_class": "local_polling",
+  "config_flow": true
+
 }
