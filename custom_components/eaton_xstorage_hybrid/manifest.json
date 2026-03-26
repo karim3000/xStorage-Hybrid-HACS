@@ -1,5 +1,5 @@
 {
-  "domain": "xStorage-Hybrid-HACS",
+  "domain": "eaton_xstorage_hybrid",
   "name": "Eaton xStorage Hybrid",
   "version": "1.0.0",
   "requirements": [
