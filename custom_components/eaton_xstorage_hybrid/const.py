@@ -1,7 +1,7 @@
 """Constants for the Eaton xStorage Hybrid integration."""
 
 # Domain name for the integration
-DOMAIN = "eaton_xstorage_hybrid"
+DOMAIN = "xStorage-Hybrid-HACS"
 
 # Configuration keys
 CONF_HOST = "host"
