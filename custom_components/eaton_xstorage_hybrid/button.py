@@ -11,13 +11,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
-from .sync_modbus import write_register_sync
+from .sync_modbus import write_register_sync  # <-- using your sync wrapper
 
 _LOGGER = logging.getLogger(__name__)
 
 ModbusWriteSteps = Iterable[Tuple[int, int]]
 
-DELAY_BETWEEN_WRITES = 2  # seconds (adjust as needed)
+DELAY_BETWEEN_WRITES = 2  # seconds
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
@@ -53,11 +53,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             delay=DELAY_BETWEEN_WRITES,
         ),
     ]
+
     async_add_entities(buttons)
 
 
 class ModbusActionButton(CoordinatorEntity, ButtonEntity):
-    """Button that performs a sequenced set of Modbus register writes, with gaps."""
+    """Button that performs a sequenced set of Modbus register writes."""
 
     _attr_has_entity_name = True
 
@@ -79,18 +80,24 @@ class ModbusActionButton(CoordinatorEntity, ButtonEntity):
         self._attr_unique_id = f"{entry_id}_{unique_suffix}"
 
     async def async_press(self) -> None:
+        """Execute the sequence of Modbus writes."""
         try:
             for i, (register, value) in enumerate(self._steps):
-                # write
+
+                # Perform sync write inside executor (correct for new pymodbus)
                 await self.hass.async_add_executor_job(
                     write_register_sync, register, value
                 )
-                # optional gap after each write except the last
+
+                # Delay between steps (except last)
                 if self._delay and i < len(self._steps) - 1:
                     await asyncio.sleep(self._delay)
 
+            # Refresh coordinator after all writes
             await self.coordinator.async_request_refresh()
 
         except Exception as exc:
-            _LOGGER.exception("Modbus action '%s' failed: %s", self._attr_name, exc)
+            _LOGGER.exception(
+                "Modbus action '%s' failed: %s", self._attr_name, exc
+            )
             raise
